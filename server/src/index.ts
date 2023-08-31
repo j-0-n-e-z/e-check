@@ -3,8 +3,6 @@ import dotenv from 'dotenv'
 import express from 'express'
 import additives from './additives.json'
 
-// type Additive = (typeof additives)[0]
-
 const notFoundError = {
 	message: 'Nothing found'
 }
@@ -15,41 +13,25 @@ const app = express()
 app.use(cors({ origin: 'http://localhost:5173' }))
 const port = process.env.PORT || 8080
 
-app.get('/adds', (req, res) => {
-	console.log(req.query)
-	const params = req.query['e']
+app.get('/add', (req, res) => {
+	const query = req.query['add'] as string
+	console.log('@query', query)
 
-	if (!params) {
-		return res.status(404)
+	if (!query) {
+		return res.send(notFoundError)
 	}
 
-	let foundAdds
+	const foundAdditives = additives.filter(
+		add => add.code.includes(query) || add.name.includes(query)
+	)
 
-	if (Array.isArray(params)) {
-		const requestedAdds = params as string[]
-		console.log('@requestedAdds', requestedAdds)
-		if (!requestedAdds.length) {
-			return res.sendStatus(404).send(notFoundError)
-		}
-		foundAdds = requestedAdds
-			.map(requestedAdd =>
-				additives.filter(add => add.code.includes(requestedAdd))
-			)
-			.flat()
-	} else {
-		const requestedAdd = params as string
-		console.log('@requestedAdd', requestedAdd)
-		if (!requestedAdd) {
-			return res.sendStatus(404).send(notFoundError)
-		}
-		foundAdds = additives.filter(add => add.code.includes(requestedAdd))
+	console.log('@foundAdditives', foundAdditives)
+
+	if (!foundAdditives.length) {
+		return res.send(notFoundError)
 	}
 
-	console.log('@foundAdds', foundAdds)
-	if (!foundAdds.length) {
-		return res.sendStatus(404).send(notFoundError)
-	}
-	return res.send(foundAdds)
+	res.send(foundAdditives)
 })
 
 app.listen(port, () => {

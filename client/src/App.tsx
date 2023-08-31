@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import additiveCodes from './codes.json'
 
 interface Additive {
 	id: string
@@ -10,63 +9,74 @@ interface Additive {
 	origins: string[]
 }
 
-function useDebounce(value: string, delay: number) {
-	const [debouncedValue, setDebouncedValue] = useState('')
+function useDebounce<T>(value: T, delay: number) {
+	const [debouncedValue, setDebouncedValue] = useState<T>()
 
 	useEffect(() => {
 		const timeout = setTimeout(() => setDebouncedValue(value), delay)
+
 		return () => clearTimeout(timeout)
-	}, [delay, value])
+	}, [value, delay])
 
 	return debouncedValue
 }
 
 function App() {
 	const [additives, setAdditives] = useState<Additive[]>([])
-	const [additivesInputValue, setAdditivesInputValue] = useState('')
-	const debouncedAdditivesInputValue = useDebounce(additivesInputValue, 1000)
+	const [error, setError] = useState('')
+	const [additive, setAdditive] = useState('')
+	const debouncedAdditive = useDebounce(additive, 500)
 
-	function fetchAdds(adds: string) {
-		console.log('fetch')
-		const queryParams = new URLSearchParams(
-			adds.split(',').map(add => ['e', add])
-		)
-		fetch(`http://localhost:8080/adds?${queryParams}`)
+	function fetchAdd() {
+		if (!debouncedAdditive) return
+		fetch(`http://localhost:8080/add?add=${debouncedAdditive}`)
 			.then(res => res.json())
-			.then(data => Array.isArray(data) ? data.filter(Boolean) : [data])
-			.then(data => setAdditives(data))
+			.then(data => {
+				if ('message' in data) {
+					setError(data.message)
+				} else {
+					setAdditives(data)
+					setError('')
+				}
+			})
 			.catch(err => console.error(err))
 	}
 
 	useEffect(() => {
-		fetchAdds(debouncedAdditivesInputValue)
-	}, [debouncedAdditivesInputValue])
+		if (debouncedAdditive) {
+			fetchAdd()
+		}
+	}, [debouncedAdditive])
+
+	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+	}
 
 	return (
 		<main>
 			<div>
-				<label>
-					<span>Additives:</span>
+				<form onSubmit={onSubmit}>
 					<input
-						value={additivesInputValue}
-						onChange={e => setAdditivesInputValue(e.target.value)}
+						type='text'
+						value={additive}
+						onChange={e => setAdditive(e.currentTarget.value)}
 					/>
-				</label>
+					<button>Find</button>
+				</form>
 			</div>
 			<div>
-				{additives.map(add => (
-					<div key={add.id}>
-						<div>Code: {add.code}</div>
-						<div>Name: {add.name}</div>
-						<div>Danger Level: {add.danger}</div>
-						<div>
-							Origins:{' '}
-							{add.origins.map(origin => (
-								<div key={origin}>{origin}</div>
-							))}
+				{!error ? (
+					additives.map(add => (
+						<div key={add.id}>
+							<div>Code: {add.code}</div>
+							<div>Name: {add.name}</div>
+							<div>Danger Level: {add.danger}</div>
+							<div>Origins: {add.origins.join(', ')}</div>
 						</div>
-					</div>
-				))}
+					))
+				) : (
+					<div>{error}</div>
+				)}
 			</div>
 		</main>
 	)
