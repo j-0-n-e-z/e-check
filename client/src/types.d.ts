@@ -1,5 +1,5 @@
 interface Additive {
-	id: string
+	_id: string
 	code: string
 	name: string
 	danger: number

@@ -8,7 +8,7 @@ const App = () => {
 
 	const selectAdditive = (additive: Additive) => {
 		setSelectedAdditives(additives => {
-			const isNotSelected = !additives.find(add => add.id === additive.id)
+			const isNotSelected = !additives.find(add => add._id === additive._id)
 			if (isNotSelected) {
 				return [...additives, additive]
 			}

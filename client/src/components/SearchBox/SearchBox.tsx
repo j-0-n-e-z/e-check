@@ -71,7 +71,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive }) => {
 				{!error ? (
 					foundAdditives.map(additive => (
 						<SearchItem
-							key={additive.id}
+							key={additive._id}
 							additive={additive}
 							selectAdditive={selectAdditive}
 						/>
