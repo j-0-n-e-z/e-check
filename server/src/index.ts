@@ -1,24 +1,8 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { Schema, connect, disconnect, model } from 'mongoose'
-import path from 'path'
-
-interface Additive {
-	code: string
-	name: string
-	danger: number
-	origins: string[]
-}
-
-const additiveSchema = new Schema<Additive>({
-	code: String,
-	name: String,
-	danger: Number,
-	origins: [String]
-})
-
-const Additive = model<Additive>('Additive', additiveSchema)
+import { connect, disconnect } from 'mongoose'
+import { Additive } from './mongo/additive'
 
 dotenv.config()
 
@@ -35,12 +19,7 @@ app.get('/add', async (req, res) => {
 		return res.sendStatus(404)
 	}
 
-	const foundAdditives = (
-		await Additive.find().or([
-			{ code: { $regex: query } },
-			{ name: { $regex: query } }
-		])
-	).map(doc => doc.toObject())
+	const foundAdditives = await Additive.includes(query)
 
 	console.log('@foundAdditives', foundAdditives)
 

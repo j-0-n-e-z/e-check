@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Additives } from './components/Additives/Additives'
-import { SearchBox } from './components/SearchBox/SearchBox'
+import { Additives, SearchBox } from '@/components'
 
 const App = () => {
 	const [selectedAdditives, setSelectedAdditives] = useState<Additive[]>([])

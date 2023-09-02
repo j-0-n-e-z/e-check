@@ -1,6 +1,5 @@
+import { useClickOutside, useDebounce } from '@/hooks'
 import { FC, useEffect, useRef, useState } from 'react'
-import { useDebounce } from '../../hooks/useDebounce'
-import { useClickOutside } from '../../hooks/useOnClickOutside'
 import { SearchItem } from './components/SearchItem'
 
 interface SearchBoxProps {
@@ -26,7 +25,11 @@ export const SearchBox: FC<SearchBoxProps> = ({
 	const fetchAdd = () => {
 		if (!debouncedInputValue) return
 
-		fetch(`http://localhost:8080/add?add=${debouncedInputValue}`)
+		const queryParams = new URLSearchParams({
+			add: debouncedInputValue
+		})
+
+		fetch(`http://localhost:8080/add?${queryParams}`)
 			.then(res => {
 				if (!res.ok) {
 					setError(res.statusText)
