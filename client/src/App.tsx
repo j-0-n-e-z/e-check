@@ -8,17 +8,23 @@ const App = () => {
 
 	const selectAdditive = (additive: Additive) => {
 		setSelectedAdditives(additives => {
-			const isNotSelected = !additives.find(add => add._id === additive._id)
-			if (isNotSelected) {
-				return [...additives, additive]
+			if (checkSelected(additive)) {
+				return additives.filter(add => add._id !== additive._id)
 			}
-			return additives
+			return [...additives, additive]
 		})
+	}
+
+	const checkSelected = (additive: Additive) => {
+		return !!selectedAdditives.find(add => add._id === additive._id)
 	}
 
 	return (
 		<main className='flex flex-col items-center'>
-			<SearchBox selectAdditive={selectAdditive} />
+			<SearchBox
+				checkSelected={checkSelected}
+				selectAdditive={selectAdditive}
+			/>
 			<Additives selectedAdditives={selectedAdditives} />
 		</main>
 	)

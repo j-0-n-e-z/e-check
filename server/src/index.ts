@@ -1,10 +1,15 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
-import { Schema, connect, model, connection } from 'mongoose'
-import additives from './additives.json'
+import { Schema, connect, disconnect, model } from 'mongoose'
+import path from 'path'
 
-type Additive = Omit<(typeof additives)[0], 'id'>
+interface Additive {
+	code: string
+	name: string
+	danger: number
+	origins: string[]
+}
 
 const additiveSchema = new Schema<Additive>({
 	code: String,
@@ -19,18 +24,15 @@ dotenv.config()
 
 const app = express()
 app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(express.static('public'))
 const port = process.env.PORT || 8080
-
-const notFoundError = {
-	message: 'Nothing found'
-}
 
 app.get('/add', async (req, res) => {
 	const query = req.query['add'] as string
 	console.log('@query', query)
 
 	if (!query) {
-		return res.send(notFoundError)
+		return res.sendStatus(404)
 	}
 
 	const foundAdditives = (
@@ -38,12 +40,12 @@ app.get('/add', async (req, res) => {
 			{ code: { $regex: query } },
 			{ name: { $regex: query } }
 		])
-	).map(r => r.toObject())
+	).map(doc => doc.toObject())
 
 	console.log('@foundAdditives', foundAdditives)
 
 	if (!foundAdditives.length) {
-		return res.send(notFoundError)
+		return res.sendStatus(404)
 	}
 
 	res.send(foundAdditives)
@@ -57,6 +59,7 @@ async function main() {
 		})
 	} catch (e) {
 		console.error(e)
+		await disconnect()
 	}
 }
 main()

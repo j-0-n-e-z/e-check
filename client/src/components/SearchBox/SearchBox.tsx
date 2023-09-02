@@ -5,32 +5,41 @@ import { SearchItem } from './components/SearchItem'
 
 interface SearchBoxProps {
 	selectAdditive: (additive: Additive) => void
+	checkSelected: (additive: Additive) => boolean
 }
 
-export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive }) => {
+export const SearchBox: FC<SearchBoxProps> = ({
+	selectAdditive,
+	checkSelected
+}) => {
 	const [foundAdditives, setFoundAdditives] = useState<Additive[]>([])
 	const [error, setError] = useState('')
 	const [inputValue, setInputValue] = useState('')
+	const [shouldShowResults, setShouldShowResults] = useState(true)
 	const debouncedInputValue = useDebounce(inputValue, 500)
+
 	const clickRef = useRef<HTMLDivElement>(null)
 	useClickOutside(clickRef, () => {
-		setFoundAdditives([])
+		setShouldShowResults(false)
 	})
 
 	const fetchAdd = () => {
 		if (!debouncedInputValue) return
 
 		fetch(`http://localhost:8080/add?add=${debouncedInputValue}`)
-			.then(res => res.json())
-			.then(data => {
-				if ('message' in data) {
-					setError(data.message)
-				} else {
-					setFoundAdditives(data)
-					setError('')
+			.then(res => {
+				if (!res.ok) {
+					setError(res.statusText)
+					throw new Error(res.statusText)
 				}
+				return res.json()
 			})
-			.catch(err => console.error(err))
+			.then(data => {
+				setFoundAdditives(data)
+				setError('')
+				setShouldShowResults(true)
+			})
+			.catch(err => console.log(`${debouncedInputValue} ${err.message}`))
 	}
 
 	useEffect(() => {
@@ -40,7 +49,6 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive }) => {
 			setFoundAdditives([])
 			setError('')
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [debouncedInputValue])
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,31 +56,27 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive }) => {
 	}
 
 	const onFocus = () => {
-		if (debouncedInputValue) {
-			fetchAdd()
-		}
+		setShouldShowResults(true)
 	}
 
 	return (
 		<div className='relative w-[400px]' ref={clickRef}>
-			<div>
-				<label>
-					<input
-						className='w-full p-2.5 rounded-md focus:outline-none indent-1'
-						type='text'
-						placeholder='Search an additive'
-						value={inputValue}
-						onChange={onChange}
-						onFocus={onFocus}
-					/>
-				</label>
-			</div>
+			<input
+				className='w-full p-2.5 rounded-md focus:outline-none indent-1'
+				type='text'
+				placeholder='Search an additive'
+				value={inputValue}
+				onChange={onChange}
+				onFocus={onFocus}
+			/>
 			<div className='w-full absolute top-12'>
 				{!error ? (
+					shouldShowResults &&
 					foundAdditives.map(additive => (
 						<SearchItem
 							key={additive._id}
 							additive={additive}
+							isSelected={checkSelected(additive)}
 							selectAdditive={selectAdditive}
 						/>
 					))
