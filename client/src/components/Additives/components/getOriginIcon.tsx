@@ -27,5 +27,7 @@ export const getOriginIcon = (origin: string) => {
 			return (
 				<img key={origin} src={`${assetsPath}/synthetic.png`} title={origin} />
 			)
+		default: 
+			return null
 	}
 }

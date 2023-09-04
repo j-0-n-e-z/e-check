@@ -9,7 +9,7 @@ dotenv.config()
 const app = express()
 app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.static('public'))
-const port = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080
 
 app.get('/add', async (req, res) => {
 	const query = req.query['add'] as string
@@ -33,8 +33,8 @@ app.get('/add', async (req, res) => {
 async function main() {
 	try {
 		await connect('mongodb://127.0.0.1:27017/e-check')
-		app.listen(port, () => {
-			console.log(`[server]: Server is running at http://localhost:${port}`)
+		app.listen(PORT, () => {
+			console.log(`[server]: Server is running at http://localhost:${PORT}`)
 		})
 	} catch (e) {
 		console.error(e)

@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import type { FC } from 'react'
+
 import { getOriginIcon } from './getOriginIcon'
 
-export const Additive: FC<Additive> = ({ code, danger, name, origins }) => {
-	return (
-		<li className='flex text-white bg-indigo-900'>
+export const Additive: FC<Additive> = ({ code, danger, name, origins }) => (
+		<li className='flex bg-indigo-900 text-white'>
 			<div>
 				<div>{code}</div>
 				<div>{name}</div>
@@ -19,4 +19,3 @@ export const Additive: FC<Additive> = ({ code, danger, name, origins }) => {
 			</div>
 		</li>
 	)
-}
