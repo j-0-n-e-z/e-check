@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import type { Additive } from '@/common'
 import { Additives, SearchBox } from '@/components'
 import './App.css'
 

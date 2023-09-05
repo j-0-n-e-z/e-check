@@ -2,32 +2,28 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import { connect, disconnect } from 'mongoose'
-import { Additive } from './mongo/additive'
+import path from 'path'
+import routerAdd from './routes/add'
 
 dotenv.config()
 
 const app = express()
 app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(express.json())
 app.use(express.static('public'))
+
 const PORT = process.env.PORT || 8080
 
-app.get('/add', async (req, res) => {
-	const query = req.query['add'] as string
-	console.log('@query', query)
+app.use('/', routerAdd)
 
-	if (!query) {
-		return res.sendStatus(404)
+app.all('*', (req, res) => {
+	if (req.accepts('html')) {
+		res.sendFile(path.join(__dirname, '../public/views/404.html'))
+	} else if (req.accepts('json')) {
+		res.send({ message: '404 - Not found' })
+	} else {
+		res.type('txt').send('404 - Not found')
 	}
-
-	const foundAdditives = await Additive.includes(query)
-
-	console.log('@foundAdditives', foundAdditives)
-
-	if (!foundAdditives.length) {
-		return res.sendStatus(404)
-	}
-
-	res.send(foundAdditives)
 })
 
 async function main() {

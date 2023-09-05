@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
+import type { Additive } from '@/common'
 import { useClickOutside, useDebounce } from '@/hooks'
 
 import { SearchItem } from './components/SearchItem'
@@ -37,7 +38,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
           setError(res.statusText)
           throw new Error(res.statusText)
         }
-        const data = await res.json() as Additive[]
+        const data = (await res.json()) as Additive[]
         setFoundAdditives(data)
         setError('')
       } catch (err) {

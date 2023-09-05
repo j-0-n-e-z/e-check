@@ -1,4 +1,7 @@
+import clsx from 'clsx'
 import type { FC } from 'react'
+
+import type { Additive } from '@/common'
 
 interface SearchItemProps {
   additive: Additive
@@ -8,7 +11,10 @@ interface SearchItemProps {
 
 export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSelected }) => {
   const { name, code, danger } = additive
-  const background = isSelected ? 'bg-green-300 hover:bg-green-400' : 'bg-white hover:bg-dark-whity'
+  const background = clsx(
+    { 'bg-green-300 hover:bg-green-400': isSelected },
+    { 'bg-white hover:bg-dark-whity': !isSelected }
+  )
 
   return (
     <li
@@ -17,7 +23,7 @@ export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSe
     >
       <div>{code}</div>
       <div>{name}</div>
-      <div className='ml-auto'>{danger}</div>
+      <div className='ml-auto'>{danger.level}</div>
     </li>
   )
 }

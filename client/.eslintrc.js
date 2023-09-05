@@ -4,6 +4,7 @@ const a11yOff = Object.keys(require('eslint-plugin-jsx-a11y').rules).reduce((acc
   return acc
 }, {})
 module.exports = {
+  root: true,
   extends: [
     'airbnb',
     'airbnb/hooks',
@@ -25,7 +26,7 @@ module.exports = {
       }
     }
   ],
-  plugins: ['sort-keys-fix'],
+  plugins: ['sort-keys-fix', 'tailwindcss', 'prettier'],
   parserOptions: {
     parser: '@typescript-eslint/parser',
     ecmaFeatures: {
@@ -36,6 +37,7 @@ module.exports = {
   },
   rules: {
     'tailwindcss/no-custom-classname': 0,
+    'tailwindcss/classnames-order': 2,
     'no-console': 0,
     '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
