@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 8080
 app.use('/', routerAdd)
 
 app.all('*', (req, res) => {
+	res.status(404)
 	if (req.accepts('html')) {
 		res.sendFile(path.join(__dirname, '../public/views/404.html'))
 	} else if (req.accepts('json')) {

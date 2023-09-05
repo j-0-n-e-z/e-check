@@ -19,7 +19,7 @@ router.get('/add', async (req, res) => {
 		return res.status(404).send({ message: '404 - Not found' })
 	}
 
-	res.send(foundAdditives)
+	res.send({ additives: foundAdditives })
 })
 
 export default router

@@ -2,6 +2,7 @@
   "name": "e-check-client",
   "version": "1.0.0",
   "author": "j-0-n-e-z",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -10,8 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "axios": "^1.5.0",
+    "framer-motion": "^10.16.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.1.2"
   },
   "devDependencies": {
     "@types/node": "^20.5.6",

@@ -1,6 +1,10 @@
 import { Additive as IAdditive } from '@/common'
 import { Model, Schema, model } from 'mongoose'
 
+function escapeRegExp(str: string) {
+	return new RegExp(str.replace(/[.*+?^${}()|[\]]/g, '\\$&'), 'i') // $& means the whole matched string
+}
+
 async function includes(query: string) {
 	return (
 		await Additive.find().or([
@@ -26,9 +30,6 @@ const additiveSchema = new Schema<IAdditive, AdditiveModel>({
 
 additiveSchema.static('includes', includes)
 
-function escapeRegExp(str: string) {
-	return str.replace(/[.*+?^${}()|[\]]/g, '\\$&') // $& means the whole matched string
-}
 
 export const Additive = model<IAdditive, AdditiveModel>(
 	'Additive',

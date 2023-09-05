@@ -1,8 +1,11 @@
+import { motion as m } from 'framer-motion'
 import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import type { Additive } from '@/common'
 import { useClickOutside, useDebounce } from '@/hooks'
+import { useAppDispatch, useAppSelector } from '@/src/redux/common/hooks'
+import { clearAdditives, fetchAdditives, getAdditives } from '@/src/redux/slices/additivesSlice'
 
 import { SearchItem } from './components/SearchItem'
 
@@ -12,9 +15,10 @@ interface SearchBoxProps {
 }
 
 export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected }) => {
-  const [foundAdditives, setFoundAdditives] = useState<Additive[]>([])
-  const [error, setError] = useState('')
-  const [shouldShowResults, setShouldShowResults] = useState(false)
+  const [shouldShowResults, setShouldShowResults] = useState(true)
+
+  const dispatch = useAppDispatch()
+  const { additives, status, error } = useAppSelector(getAdditives)
 
   const [inputValue, setInputValue] = useState('')
   const debouncedInputValue = useDebounce(inputValue, 500)
@@ -25,38 +29,11 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
   })
 
   useEffect(() => {
-    const fetchAdd = async () => {
-      if (!debouncedInputValue) return
-
-      const queryParams = new URLSearchParams({
-        add: debouncedInputValue
-      })
-
-      try {
-        const res = await fetch(`http://localhost:8080/add?${queryParams}`)
-        if (!res.ok) {
-          setError(res.statusText)
-          throw new Error(res.statusText)
-        }
-        const data = (await res.json()) as Additive[]
-        setFoundAdditives(data)
-        setError('')
-      } catch (err) {
-        if (typeof err === 'string') {
-          console.log(`${debouncedInputValue} ${err}`)
-        } else {
-          console.log(`${debouncedInputValue} ${(err as Error).message}`)
-        }
-      } finally {
-        setShouldShowResults(true)
-      }
-    }
-
     if (debouncedInputValue) {
-      fetchAdd()
+      dispatch(fetchAdditives(debouncedInputValue))
+      setShouldShowResults(true)
     } else {
-      setFoundAdditives([])
-      setError('')
+      dispatch(clearAdditives())
       setShouldShowResults(false)
     }
   }, [debouncedInputValue])
@@ -66,10 +43,14 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
   }
 
   const onFocus = () => {
-    if (foundAdditives.length || error) {
+    if (additives.length || error) {
       setShouldShowResults(true)
     }
   }
+
+  if (status === 'loading') return <div>Loading additives...</div>
+
+  if (error) return <div>Error: {error}</div>
 
   return (
     <div ref={clickRef} className='relative mx-auto w-1/2'>
@@ -82,9 +63,15 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
         onFocus={onFocus}
       />
       {shouldShowResults && (
-        <ul className='absolute top-16 w-full overflow-hidden rounded-[0_0_.5rem_.5rem] border-[1px] border-dark-whity shadow-searchResults'>
+        <m.ul
+          key={additives.length}
+          animate={{ opacity: 1, scale: 1 }}
+          className='absolute top-16 w-full overflow-hidden rounded-[0_0_.5rem_.5rem] border-[1px] border-dark-whity shadow-searchResults'
+          initial={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.2, type: 'spring' }}
+        >
           {!error ? (
-            foundAdditives.map((additive) => (
+            additives.map((additive) => (
               <SearchItem
                 key={additive._id}
                 additive={additive}
@@ -93,9 +80,9 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
               />
             ))
           ) : (
-            <li className='bg-neutral-600 p-3 text-center text-white'>{error}</li>
+            <m.li className='bg-whity p-3 text-center text-dark '>{error}</m.li>
           )}
-        </ul>
+        </m.ul>
       )}
     </div>
   )
