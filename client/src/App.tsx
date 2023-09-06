@@ -18,13 +18,20 @@ const App = () => {
     })
   }
 
+  const clearSelectedAdditives = () => {
+    setSelectedAdditives([])
+  }
+
   return (
     <>
-      <header className='grid h-[25vh] w-full place-items-center bg-header'>
+      <header className='grid h-[20vh] w-full place-items-center bg-header'>
         <SearchBox checkSelected={checkSelected} selectAdditive={selectAdditive} />
       </header>
-      <main className='flex w-full flex-1 flex-col items-center'>
-        <Additives selectedAdditives={selectedAdditives} />
+      <main className='flex w-full flex-1 flex-col items-center bg-[#cdb7ff]'>
+        <Additives
+          clearSelectedAdditives={clearSelectedAdditives}
+          selectedAdditives={selectedAdditives}
+        />
       </main>
     </>
   )

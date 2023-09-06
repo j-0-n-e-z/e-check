@@ -39,6 +39,7 @@ module.exports = {
     'tailwindcss/no-custom-classname': 0,
     'tailwindcss/classnames-order': 2,
     'no-console': 0,
+    'radix': 0,
     '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/no-shadow': 0,

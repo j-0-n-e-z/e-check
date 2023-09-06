@@ -10,5 +10,5 @@ module.exports = {
   semi: false,
   plugins: ['prettier-plugin-tailwindcss'],
   tailwindFunctions: ['clsx'],
-  tailwindConfig: './tailwind.config.js',
+  tailwindConfig: './tailwind.config.js'
 }
