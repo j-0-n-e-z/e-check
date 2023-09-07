@@ -10,14 +10,14 @@ import { OriginIcon } from './components/OriginIcon'
 
 export const Additive: FC<IAdditive> = (additive) => {
   const { code, danger, name, origins } = additive
-  const [shouldShowDangerModal, setShouldShowDangerModal] = useState(false)
+  const [isModalOpened, setIsModalOpened] = useState(false)
 
   const onOpenModal = () => {
-    setShouldShowDangerModal(true)
+    setIsModalOpened(true)
   }
 
   const onCloseModal = () => {
-    setShouldShowDangerModal(false)
+    setIsModalOpened(false)
   }
 
   return (
@@ -55,7 +55,7 @@ export const Additive: FC<IAdditive> = (additive) => {
         </div>
       </div>
 
-      {shouldShowDangerModal && <DangerModal additive={additive} close={onCloseModal} />}
+      {isModalOpened && <DangerModal additive={additive} close={onCloseModal} />}
     </m.li>
   )
 }
