@@ -2,7 +2,7 @@ import type { FC } from 'react'
 
 import type { Additive as IAdditive } from '@/common'
 
-import { Additive } from './components/Additive'
+import { Additive } from './components/Additive/Additive'
 
 interface AdditivesProps {
   selectedAdditives: IAdditive[]

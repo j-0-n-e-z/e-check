@@ -3,10 +3,10 @@ import { useState, type FC } from 'react'
 
 import type { Additive as IAdditive } from '@/common'
 
-import { DangerModal } from '../../DangerModal/DangerModal'
+import { DangerModal } from '../../../DangerModal/DangerModal'
 
-import { DangerLevel } from './DangerLevel'
-import { getOriginIcon } from './helpers/getOriginIcon'
+import { DangerLevel } from './components/DangerLevel'
+import { OriginIcon } from './components/OriginIcon'
 
 export const Additive: FC<IAdditive> = (additive) => {
   const { code, danger, name, origins } = additive
@@ -38,7 +38,7 @@ export const Additive: FC<IAdditive> = (additive) => {
           <ul className='flex flex-col gap-y-3'>
             {origins.map((origin) => (
               <li key={origin} className='flex items-center gap-x-2'>
-                {getOriginIcon(origin)}
+                <OriginIcon origin={origin} />
                 <span>{origin}</span>
               </li>
             ))}

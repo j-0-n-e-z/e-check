@@ -48,12 +48,11 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
     }
   }
 
-  if (status === 'loading') return <div>Loading additives...</div>
-
   return (
     <div ref={clickRef} className='relative mx-auto w-1/2'>
       <input
         className='w-full rounded-md p-4 indent-1 text-lg focus:outline-none'
+        disabled={status === 'loading'}
         placeholder='Найти пищевую добавку'
         type='text'
         value={inputValue}
