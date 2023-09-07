@@ -15,12 +15,12 @@ interface SearchItemProps {
 export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSelected }) => {
   const { name, code, danger } = additive
   const background = clsx(
-    { 'bg-green-100 hover-hover:hover:bg-green-200 ': danger.level === 0 },
-    { 'bg-green-300 hover-hover:hover:bg-green-500': danger.level === 1 },
-    { 'bg-yellow-200 hover-hover:hover:bg-yellow-300': danger.level === 2 },
-    { 'bg-orange-300 hover-hover:hover:bg-orange-400': danger.level === 3 },
-    { 'bg-red-400 hover-hover:hover:bg-red-500': danger.level === 4 },
-    { 'bg-red-600 hover-hover:hover:bg-red-700': danger.level === 5 }
+    { 'bg-danger-0 hover:bg-danger-0-hover': danger.level === 0 },
+    { 'bg-danger-1 hover:bg-danger-1-hover': danger.level === 1 },
+    { 'bg-danger-2 hover:bg-danger-2-hover': danger.level === 2 },
+    { 'bg-danger-3 hover:bg-danger-3-hover': danger.level === 3 },
+    { 'bg-danger-4 hover:bg-danger-4-hover': danger.level === 4 },
+    { 'bg-danger-5 hover:bg-danger-5-hover': danger.level === 5 }
   )
 
   return (
@@ -30,7 +30,7 @@ export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSe
       whileTap={{ scale: 0.9 }}
       onClick={() => selectAdditive(additive)}
     >
-      <div className='w-[8%]'>
+      <div>
         <strong>{code}</strong>
       </div>
       <div>{name}</div>
