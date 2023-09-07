@@ -8,7 +8,7 @@ interface DangerModalProps {
   additive: Additive
   close: () => void
 }
-
+// TODO: make modal close on outside click
 export const DangerModal: FC<DangerModalProps> = ({
   additive: {
     danger: { reasons, level },

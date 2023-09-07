@@ -1,5 +1,8 @@
+
+// TODO: make origin an Origin type
 export const getOriginIcon = (origin: string) => {
-	const assetsPath = 'http://localhost:8080/assets'
+  const assetsUrl = 'http://localhost:8080/assets'
+  // TODO: refactor make a component OriginIcon
 	// TODO: add to prettier setting tailwindFunctions classname or smth like that
   const classname = 'h-10 w-10 inline'
   switch (true) {
@@ -8,7 +11,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/animal.png`}
+          src={`${assetsUrl}/animal.png`}
           title={`${origin} происхождение`}
         />
       )
@@ -17,7 +20,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/plant.png`}
+          src={`${assetsUrl}/plant.png`}
           title={`${origin} происхождение`}
         />
       )
@@ -26,7 +29,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/artificial.png`}
+          src={`${assetsUrl}/artificial.png`}
           title={`${origin} происхождение`}
         />
       )
@@ -35,7 +38,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/microbiological.png`}
+          src={`${assetsUrl}/microbiological.png`}
           title={`${origin} происхождение`}
         />
       )
@@ -44,7 +47,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/mineral.png`}
+          src={`${assetsUrl}/mineral.png`}
           title={`${origin} происхождение`}
         />
       )
@@ -53,7 +56,7 @@ export const getOriginIcon = (origin: string) => {
         <img
           key={origin}
           className={classname}
-          src={`${assetsPath}/synthetic.png`}
+          src={`${assetsUrl}/synthetic.png`}
           title={`${origin} происхождение`}
         />
       )

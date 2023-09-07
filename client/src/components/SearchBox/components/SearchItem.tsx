@@ -27,7 +27,7 @@ export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSe
     <m.li
       className={`flex w-full cursor-pointer items-center gap-x-2 p-3 text-dark transition duration-100 ${background}`}
       whileHover={{ scale: 1 }}
-      whileTap={{ scale: 0.8 }}
+      whileTap={{ scale: 0.9 }}
       onClick={() => selectAdditive(additive)}
     >
       <div className='w-[8%]'>
