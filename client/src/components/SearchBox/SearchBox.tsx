@@ -15,7 +15,7 @@ interface SearchBoxProps {
 }
 
 export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected }) => {
-  const [shouldShowResults, setShouldShowResults] = useState(true)
+  const [isShowResults, setIsShowResults] = useState(false)
 
   const dispatch = useAppDispatch()
   const { additives, status, error } = useAppSelector(getAdditives)
@@ -25,16 +25,15 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
 
   const clickRef = useRef<HTMLDivElement>(null)
   useClickOutside(clickRef, () => {
-    setShouldShowResults(false)
+    setIsShowResults(false)
   })
 
   useEffect(() => {
     if (debouncedInputValue) {
       dispatch(fetchAdditives(debouncedInputValue))
-      setShouldShowResults(true)
-    } else {
+      setIsShowResults(true)
+    } else if (additives) {
       dispatch(clearAdditives())
-      setShouldShowResults(false)
     }
   }, [debouncedInputValue])
 
@@ -44,7 +43,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
 
   const onFocus = () => {
     if (additives.length || error) {
-      setShouldShowResults(true)
+      setIsShowResults(true)
     }
   }
 
@@ -59,7 +58,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
         onChange={onChange}
         onFocus={onFocus}
       />
-      {shouldShowResults && (
+      {isShowResults && status !== 'loading' && (
         <m.ul
           key={additives.length}
           animate={{ opacity: 1, scale: 1 }}
