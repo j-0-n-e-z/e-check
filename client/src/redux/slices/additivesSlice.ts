@@ -54,9 +54,10 @@ export const additivesSlice = createSlice({
         if (action.payload.response?.status === 404) {
           state.error = 'Добавка не найдена'
         } else {
-          state.error = action.payload.response?.statusText || 'unknown error'
+          state.error = action.payload.message
         }
       } else {
+        console.log(action.error)
         state.error = action.error.message || 'unknown error'
       }
     })
