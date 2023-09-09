@@ -1,8 +1,7 @@
 import type { FC } from 'react'
 
 import type { Additive as IAdditive } from '@/common'
-
-import { Additive } from './components/Additive/Additive'
+import { Additive } from '@/components'
 
 interface AdditivesProps {
   selectedAdditives: IAdditive[]
@@ -38,3 +37,5 @@ export const Additives: FC<AdditivesProps> = ({ selectedAdditives, clearSelected
     </div>
   )
 }
+
+export * from './components/Additive/Additive'

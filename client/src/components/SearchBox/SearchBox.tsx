@@ -3,11 +3,15 @@ import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import type { Additive } from '@/common'
+import { SearchItem } from '@/components'
 import { useClickOutside, useDebounce } from '@/hooks'
-import { useAppDispatch, useAppSelector } from '@/src/redux/common/hooks'
-import { clearAdditives, fetchAdditives, getAdditives } from '@/src/redux/slices/additivesSlice'
-
-import { SearchItem } from './components/SearchItem'
+import {
+  clearAdditives,
+  fetchAdditives,
+  getAdditives,
+  useAppDispatch,
+  useAppSelector
+} from '@/redux'
 
 interface SearchBoxProps {
   selectAdditive: (additive: Additive) => void
@@ -34,6 +38,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
       setIsShowResults(true)
     } else if (additives) {
       dispatch(clearAdditives())
+      setIsShowResults(false)
     }
   }, [debouncedInputValue])
 
@@ -83,3 +88,5 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
     </div>
   )
 }
+
+export * from './components/SearchItem/SearchItem'

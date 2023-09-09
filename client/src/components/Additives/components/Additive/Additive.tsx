@@ -2,11 +2,7 @@ import { motion as m } from 'framer-motion'
 import { useState, type FC } from 'react'
 
 import type { Additive as IAdditive } from '@/common'
-
-import { DangerModal } from '../../../DangerModal/DangerModal'
-
-import { DangerLevel } from './components/DangerLevel'
-import { OriginIcon } from './components/OriginIcon'
+import { DangerLevel, DangerModal, OriginIcon } from '@/components'
 
 export const Additive: FC<IAdditive> = (additive) => {
   const { code, danger, name, origins } = additive
@@ -59,3 +55,6 @@ export const Additive: FC<IAdditive> = (additive) => {
     </m.li>
   )
 }
+
+export * from './components/DangerLevel'
+export * from './components/OriginIcon'

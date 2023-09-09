@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 import type { Origin } from '@/common'
-import { originIconNames } from '@/src/data/originIconNames'
+import { originIconNames } from '@/data'
 
 interface OriginIconProps {
   origin: Origin

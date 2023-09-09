@@ -3,8 +3,7 @@ import { motion as m } from 'framer-motion'
 import type { FC } from 'react'
 
 import type { Additive } from '@/common'
-
-import { CheckIcon } from './CheckIcon'
+import { CheckIcon } from '@/components'
 
 interface SearchItemProps {
   additive: Additive
@@ -43,3 +42,5 @@ export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSe
     </m.li>
   )
 }
+
+export * from './components/CheckIcon'

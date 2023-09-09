@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import type { FC } from 'react'
 
-import { dangerLevelTexts } from '@/src/data/dangerLevelTexts'
+import { dangerLevelTexts } from '@/data'
 
 interface DangerLevelProps {
   level: number
