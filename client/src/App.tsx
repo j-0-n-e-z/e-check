@@ -6,12 +6,12 @@ import { Additives, SearchBox } from '@/components'
 const App = () => {
   const [selectedAdditives, setSelectedAdditives] = useState<Additive[]>([])
 
-  const checkSelected = (additive: Additive) =>
+  const checkIfSelected = (additive: Additive) =>
     !!selectedAdditives.find((add) => add._id === additive._id)
 
-  const selectAdditive = (additive: Additive) => {
+  const toggleAdditive = (additive: Additive) => {
     setSelectedAdditives((additives) => {
-      if (checkSelected(additive)) {
+      if (checkIfSelected(additive)) {
         return additives.filter((add) => add._id !== additive._id)
       }
       return [...additives, additive]
@@ -25,7 +25,7 @@ const App = () => {
   return (
     <>
       <header className='grid h-[20vh] w-full place-items-center bg-header'>
-        <SearchBox checkSelected={checkSelected} selectAdditive={selectAdditive} />
+        <SearchBox checkSelected={checkIfSelected} toggleAdditive={toggleAdditive} />
       </header>
       <main className='flex w-full flex-1 flex-col items-center bg-[#cdb7ff]'>
         <Additives

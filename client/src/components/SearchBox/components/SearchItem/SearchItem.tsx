@@ -8,10 +8,10 @@ import { CheckIcon } from '@/components'
 interface SearchItemProps {
   additive: Additive
   isSelected: boolean
-  selectAdditive: (additive: Additive) => void
+  toggleAdditive: (additive: Additive) => void
 }
 
-export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSelected }) => {
+export const SearchItem: FC<SearchItemProps> = ({ additive, toggleAdditive, isSelected }) => {
   const { name, code, danger } = additive
   const background = clsx(
     { 'bg-danger-0 hover:bg-danger-0-hover': danger.level === 0 },
@@ -27,7 +27,7 @@ export const SearchItem: FC<SearchItemProps> = ({ additive, selectAdditive, isSe
       className={`flex w-full cursor-pointer items-center gap-x-2 p-3 text-dark transition duration-100 ${background}`}
       whileHover={{ scale: 1 }}
       whileTap={{ scale: 0.9 }}
-      onClick={() => selectAdditive(additive)}
+      onClick={() => toggleAdditive(additive)}
     >
       <div>
         <strong>{code}</strong>

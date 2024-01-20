@@ -14,31 +14,31 @@ import {
 } from '@/redux'
 
 interface SearchBoxProps {
-  selectAdditive: (additive: Additive) => void
+  toggleAdditive: (additive: Additive) => void
   checkSelected: (additive: Additive) => boolean
 }
 
-export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected }) => {
-  const [isShowResults, setIsShowResults] = useState(false)
+export const SearchBox: FC<SearchBoxProps> = ({ toggleAdditive, checkSelected }) => {
+  const [isShowSearchResults, setIsShowSearchResults] = useState(false)
 
   const dispatch = useAppDispatch()
   const { additives, status, error } = useAppSelector(getAdditives)
 
   const [inputValue, setInputValue] = useState('')
-  const debouncedInputValue = useDebounce(inputValue, 500)
+  const debouncedInputValue = useDebounce<string>(inputValue, 500)
 
   const clickRef = useRef<HTMLDivElement>(null)
   useClickOutside(clickRef, () => {
-    setIsShowResults(false)
+    setIsShowSearchResults(false)
   })
 
   useEffect(() => {
     if (debouncedInputValue) {
       dispatch(fetchAdditives(debouncedInputValue))
-      setIsShowResults(true)
+      setIsShowSearchResults(true)
     } else if (additives) {
       dispatch(clearAdditives())
-      setIsShowResults(false)
+      setIsShowSearchResults(false)
     }
   }, [debouncedInputValue])
 
@@ -48,7 +48,7 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
 
   const onFocus = () => {
     if (additives.length || error) {
-      setIsShowResults(true)
+      setIsShowSearchResults(true)
     }
   }
 
@@ -56,14 +56,14 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
     <div ref={clickRef} className='relative mx-auto w-1/2'>
       <input
         className='w-full rounded-md p-4 indent-1 text-lg focus:outline-none'
-        disabled={status === 'loading'}
+        disabled={status === 'pending'}
         placeholder='Найти пищевую добавку'
         type='text'
         value={inputValue}
         onChange={onChange}
         onFocus={onFocus}
       />
-      {isShowResults && status !== 'loading' && (
+      {isShowSearchResults && status !== 'pending' && (
         <m.ul
           key={additives.length}
           animate={{ opacity: 1, scale: 1 }}
@@ -77,11 +77,11 @@ export const SearchBox: FC<SearchBoxProps> = ({ selectAdditive, checkSelected })
                 key={additive._id}
                 additive={additive}
                 isSelected={checkSelected(additive)}
-                selectAdditive={selectAdditive}
+                toggleAdditive={toggleAdditive}
               />
             ))
           ) : (
-            <li className='bg-whity p-3 text-center text-dark '>{error}</li>
+            <li className='bg-whity p-3 text-center text-dark'>{error}</li>
           )}
         </m.ul>
       )}

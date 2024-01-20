@@ -8,7 +8,7 @@ import type { RootState } from '../common/store'
 
 export interface AdditivesState {
   additives: Additive[]
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  status: 'idle' | 'pending'
   error: string
 }
 
@@ -22,7 +22,7 @@ const BASE_URL = 'http://localhost:8080/add'
 
 export const fetchAdditives = createAsyncThunk<AdditivesState, string, { rejectValue: AxiosError }>(
   'additivesThunk',
-  async (query: string, { rejectWithValue }) => {
+  async (query, thunkApi) => {
     const queryParams = new URLSearchParams({
       add: query
     })
@@ -30,7 +30,7 @@ export const fetchAdditives = createAsyncThunk<AdditivesState, string, { rejectV
       const response = await axios.get<AdditivesState>(`${BASE_URL}?${queryParams}`)
       return response.data
     } catch (e) {
-      return rejectWithValue(e as AxiosError)
+      return thunkApi.rejectWithValue(e as AxiosError)
     }
   }
 )
@@ -38,27 +38,33 @@ export const fetchAdditives = createAsyncThunk<AdditivesState, string, { rejectV
 export const additivesSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchAdditives.pending, (state) => {
-      state.status = 'loading'
+      if (state.status === 'idle') {
+        state.status = 'pending'
+      }
     })
     builder.addCase(fetchAdditives.fulfilled, (state, action) => {
-      state.status = 'succeeded'
-      state.additives = action.payload.additives.sort(
-        (a, b) => parseInt(a.code.slice(1)) - parseInt(b.code.slice(1))
-      )
-      state.error = ''
+      if (state.status === 'pending') {
+        state.status = 'idle'
+        state.additives = action.payload.additives.sort(
+          (a, b) => parseInt(a.code.slice(1)) - parseInt(b.code.slice(1))
+        )
+        state.error = ''
+      }
     })
     builder.addCase(fetchAdditives.rejected, (state, action) => {
-      state.status = 'failed'
-      state.additives = []
-      if (action.payload) {
-        if (action.payload.response?.status === 404) {
-          state.error = 'Добавка не найдена'
+      if (state.status === 'pending') {
+        state.status = 'idle'
+        state.additives = []
+        if (action.payload) {
+          if (action.payload.response?.status === 404) {
+            state.error = 'Добавка не найдена'
+          } else {
+            state.error = action.payload.message
+          }
         } else {
-          state.error = action.payload.message
+          console.log(action.error)
+          state.error = action.error.message || 'unknown error'
         }
-      } else {
-        console.log(action.error)
-        state.error = action.error.message || 'unknown error'
       }
     })
   },
