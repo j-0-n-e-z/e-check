@@ -17,8 +17,8 @@ export const DangerLevel: FC<DangerLevelProps> = ({ level }) => {
   )
 
   const dangerBlocks = Array.from({ length: 5 }, (_, i) => {
-    if (i + 1 <= level) return <div key={i} className={`h-4 w-7 ${background} rounded-sm`} />
-    return <div key={i} className='h-4 w-7 rounded-sm bg-danger-0 ' />
+    const blockBackground = i + 1 <= level ? background : 'bg-danger-0'
+    return <div key={i} className={`h-4 w-7 rounded-sm ${blockBackground}`} />
   })
 
   return (
